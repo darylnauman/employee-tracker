@@ -13,7 +13,7 @@
 [Screenshots](#screenshots)
 
 ## Description
-The focus of this homework assignment for the University of Toronto SCS Coding Boot Camp was to to architect and build a solution for managing a company's employees using node, inquirer, and MySQL.
+The focus of this homework assignment for the University of Toronto SCS Coding Boot Camp was to architect and build a solution for managing a company's employees using node, inquirer, and MySQL.
 
 ## Key Features
 - Application uses the inquirer package available from [npm](https://www.npmjs.com/package/inquirer) that allows for the command line prompts and user responses to be captured.
