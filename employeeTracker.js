@@ -10,6 +10,17 @@ const connection = mysql.createConnection({
   database: "employees_db",
 });
 
+// TO DO GET MANAGER NAME WORKING
+const allEmployees = () => {
+  connection.query('SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, salary, employee.manager_id AS manager FROM employees_db.employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id;', (err, results) => {
+    if (err) throw err;
+    console.log('\n');
+    console.table(results);
+    console.log('\n');
+  })
+  start();
+}
+
 const start = () => {
   inquirer
     .prompt([
@@ -34,7 +45,7 @@ const start = () => {
       
       switch (response.choice) {
         case 'View all employees':
-          // function
+          allEmployees();
           break;
         case 'View all employees by department':
           // function
