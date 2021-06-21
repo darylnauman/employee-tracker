@@ -1,6 +1,6 @@
-const mysql = require("mysql");
-const inquirer = require("inquirer");
-const cTable = require("console.table");
+const mysql = require('mysql');
+const inquirer = require('inquirer');
+const cTable = require('console.table');
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -10,24 +10,76 @@ const connection = mysql.createConnection({
   database: "employees_db",
 });
 
+//  --------- VIEWS --------- //
+
 // TO DO GET MANAGER NAME WORKING
-const allEmployees = () => {
-  connection.query('SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, salary, employee.manager_id AS manager FROM employees_db.employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id;', (err, results) => {
-    if (err) throw err;
-    console.log('\n');
-    console.table(results);
-    console.log('\n');
+const viewAllEmployees = () => {
+  const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, salary, employee.manager_id AS manager
+  FROM employees_db.employee
+  JOIN role ON employee.role_id = role.id
+  JOIN department ON role.department_id = department.id;`;
+  connection.query(
+    query,
+    (err, results) => {
+      if (err) throw err;
+      console.log('\n');
+      console.table(results);
+      console.log('\n');
+      start();
   })
-  start();
 }
 
-const allEmployeesByDepartment = () => {
-  start();
+const viewAllEmployeesByDepartment = () => {
+  const query = `SELECT department.id AS "Department ID", department.name AS Department FROM employees_db.department`;
+  connection.query(
+    query,
+    (err, results) => {
+      if (err) throw err;
+      console.log('\n');
+      console.table(results);
+      start();
+  })
 }
 
-const allEmployeesByManager = () => {
-  start();
+const viewAllEmployeesByManager = () => {
+  const query = `SELECT employee.first_name, employee.last_name, manager_id
+  FROM employees_db.employee
+  ORDER BY employee.manager_id;`;
+  connection.query(
+    query,
+    (err, results) => {
+      if (err) throw err;
+      console.log('\n');
+      console.table(results);
+      start();
+  })
 }
+
+const viewAllDepartments = () => {
+  const query = `SELECT department.id AS "Department ID", department.name AS Department FROM employees_db.department`;
+  connection.query(
+    query,
+    (err, results) => {
+      if (err) throw err;
+      console.log('\n');
+      console.table(results);
+      start();
+  })
+}
+
+const viewAllRoles = () => {
+  const query = `SELECT role.id AS "Role ID", role.title AS Role, role.salary AS Salary, role.department_id AS "Department ID" FROM employees_db.role`;
+  connection.query(
+    query,
+    (err, results) => {
+      if (err) throw err;
+      console.log('\n');
+      console.table(results);
+      start();
+  })
+}
+
+//  --------- ADDS --------- //
 
 // TO DO - In Progress
 const addEmployee = () => {
@@ -68,15 +120,47 @@ const addEmployee = () => {
         (err, res) => {
           if (err) throw err;
           console.log("New employee added");
+          start();
         }
       )
     })
+}
+
+const addDepartment = () => {
+  console.log('In addDepartment');
+  inquirer
+    .prompt([
+      {
+        name: newDepartment,
+        type: 'input',
+        message: 'What is the new department name? '
+      }
+    ])
+    .then ( (response) => {
+      connection.query(
+        'INSERT INTO employees_db.department SET ?',
+        {
+          name: response.newDepartment,
+        },
+        (err) => {
+          if (err) throw err;
+          console.log('New department added successfully!')
+          start();
+      })
+    })
+}
+
+const addRole = () => {
   start();
 }
+
+//  --------- REMOVES --------- //
 
 const removeEmployee = () => {
   start();
 }
+
+//  --------- UPDATES --------- //
 
 const updateEmployeeRole = () => {
   start();
@@ -86,6 +170,8 @@ const updateEmployeeManager = () => {
   start();
 }
 
+//  --------- START --------- //
+
 const start = () => {
   inquirer
     .prompt([
@@ -93,10 +179,14 @@ const start = () => {
         type: "list",
         message: "What would you like to do? ",
         choices: [
-          "View all employees",
+          "View all employees",          
           "View all employees by department",
           "View all employees by manager",
+          "View all departments",
+          "View all roles",
           "Add employee",
+          "Add department",
+          "Add role",
           "Remove employee",
           "Update employee role",
           "Update employee manager",
@@ -106,20 +196,31 @@ const start = () => {
       },
     ])
     .then((response) => {
-      console.log(response.choice);
-      
+      // console.log(response.choice);
       switch (response.choice) {
         case 'View all employees':
-          allEmployees();
+          viewAllEmployees();
           break;
         case 'View all employees by department':
-          allEmployeesByDepartment();
+          viewAllEmployeesByDepartment();
           break;
         case 'View all employees by manager':
-          allEmployeesByManager();
+           viewAllEmployeesByManager();
+           break;
+        case 'View all departments':
+          viewAllDepartments();
+          break;
+        case 'View all roles':
+          viewAllRoles();
           break;
         case 'Add employee':
           addEmployee();
+          break;
+        case 'Add department':
+          addDepartment();
+          break;
+        case 'Add role':
+          addRole();
           break;
         case 'Remove employee':
           removeEmployee();
