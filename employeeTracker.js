@@ -12,19 +12,24 @@ const connection = mysql.createConnection({
 
 //  --------- VIEWS --------- //
 
-// TO DO GET MANAGER NAME WORKING
 const viewAllEmployees = () => {
-  const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, salary, employee.manager_id AS manager
-  FROM employees_db.employee
-  JOIN role ON employee.role_id = role.id
-  JOIN department ON role.department_id = department.id;`;
+  
+  const query = `
+  SELECT e.id, e.first_name, e.last_name, role.title, department.name AS department, salary, IFNULL(concat(m.first_name, ' ', m.last_name), 'N/A') AS manager
+  FROM employee e
+  LEFT JOIN employee m
+  ON m.id = e.manager_id
+  JOIN role
+  ON e.role_id = role.id
+  JOIN department
+  ON role.department_id = department.id;`
+    
   connection.query(
     query,
     (err, results) => {
       if (err) throw err;
       console.log('\n');
       console.table(results);
-      console.log('\n');
       start();
   })
 }
