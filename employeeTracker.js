@@ -170,7 +170,6 @@ const getDepartments = () => {
 const addRole = async () => {
   
   const departments = await getDepartments();
-
   const responses = await inquirer
   .prompt([
     {
@@ -219,8 +218,52 @@ const removeEmployee = () => {
 
 //  --------- UPDATES --------- //
 
-const updateEmployeeRole = () => {
-  start();
+const updateEmployeeRole = async () => {
+  
+  connection.query('Select * FROM employee', async (err, employees) => {
+    if (err) throw err;
+  
+    const employeeSelected = await inquirer
+      .prompt([
+        {
+          name: 'employee_id',
+          type: 'list',
+          choices: employees.map(employee => ({name:employee.first_name + " " + employee.last_name, value: employee.id})),
+          message: 'Whose role would you like to update? ',
+        }
+      ])
+  
+    connection.query('Select * FROM role', async (err, roles) => {
+      if (err) throw err;
+
+      const roleSelected = await inquirer
+        .prompt([
+          {
+            name: 'role_id',
+            type: 'list',
+            choices: roles.map(role => ({name:role.title, value: role.id})),
+            message: 'What is the new role? ',
+          }
+        ])
+
+      connection.query(
+        'UPDATE employees_db.employee SET ? WHERE ?',
+        [
+          {
+            role_id: roleSelected.role_id,
+          },
+          {
+            id: employeeSelected.employee_id, 
+          }
+        ],
+        (err) => {
+          if (err) throw err;
+          console.log('Employee role updated successfully!\n')
+          start();
+        }
+      )
+    })
+  })
 }
 
 const updateEmployeeManager = () => {
