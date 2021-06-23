@@ -86,53 +86,58 @@ const viewAllRoles = () => {
 
 //  --------- ADDS --------- //
 
-// TO DO - In Progress
-const addEmployee = () => {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "What is the employee's first name? ",
-        name: "first_name"
-      },
-      {
-        type: "input",
-        message: "What is the employee's last name? ",
-        name: "last_name"
-      },
-      {
-        type: "list",
-        message: "What is the employee's role? ",
-        choices: [], // TO DO - GET LIST OF ROLES
-        name: "role"
-      },
-      {
-        type: "list",
-        message: "Who is the employee's manager? ",
-        choices: [], // TO DO - GET LIST OF MANAGERS + NULL?
-        name: "" // MANAGER ID OR EMPLOYEE NAME??
-      }
-    ])
-    .then ( (responses) => {
-      connection.query(
-        'INSERT INTO employee SET ?',
+const addEmployee = async () => {
+  
+  connection.query('Select * FROM role', async (err, roles) => {
+    if (err) throw err; 
+  
+    const responses = await inquirer
+      .prompt([
         {
-          first_name: responses.first_name,
-          last_name: responses.last_name,
-          role_id: 'role', // TO DO FIGURE OUT GETTING ROLE ID
-          manager_id: '' // TO DO FIGURE OUT GETTING MANAGER ID
+          type: "input",
+          message: "What is the employee's first name? ",
+          name: "first_name"
         },
-        (err, res) => {
-          if (err) throw err;
-          console.log("New employee added");
-          start();
-        }
-      )
-    })
+        {
+          type: "input",
+          message: "What is the employee's last name? ",
+          name: "last_name"
+        },
+        {
+          type: "list",
+          message: "What is the employee's role? ",
+          choices: roles.map(role => ({name:role.title, value: role.id})),
+          name: "role_id"
+        },
+        // {
+        //   type: "list",
+        //   message: "Who is the employee's manager? ",
+        //   choices: [], // TO DO - GET LIST OF MANAGERS + NULL?
+        //   name: "" // MANAGER ID OR EMPLOYEE NAME??
+        // }
+      ])
+    
+      console.log(JSON.stringify(responses));
+
+    // connection.query(
+    //     'INSERT INTO employee SET ?',
+    //     {
+    //       first_name: responses.first_name,
+    //       last_name: responses.last_name,
+    //       role_id: responses.role_id,
+    //       // manager_id: '' // TO DO FIGURE OUT GETTING MANAGER ID
+    //     },
+    //     (err, res) => {
+    //       if (err) throw err;
+    //       console.log("New employee added");
+    //       start();
+    //     }
+    // )
+  })
 }
 
-const addDepartment = () => {
-  inquirer
+const addDepartment = async () => {
+  const response = await inquirer
     .prompt([
       {
         name: 'newDepartment',
@@ -140,18 +145,18 @@ const addDepartment = () => {
         message: 'What is the new department name? '
       }
     ])
-    .then ( (response) => {
-      connection.query(
-        'INSERT INTO employees_db.department SET ?',
-        {
-          name: response.newDepartment,
-        },
-        (err) => {
-          if (err) throw err;
-          console.log('New department added successfully!')
-          start();
-      })
-    })
+    
+    connection.query(
+      'INSERT INTO employees_db.department SET ?',
+      {
+        name: response.newDepartment,
+      },
+      (err) => {
+        if (err) throw err;
+        console.log('New department added successfully!')
+        start();
+      }
+    )
 }
 
 const getDepartments = () => {
@@ -242,7 +247,7 @@ const updateEmployeeRole = async () => {
             name: 'role_id',
             type: 'list',
             choices: roles.map(role => ({name:role.title, value: role.id})),
-            message: 'What is the new role? ',
+            message: 'What is their new role? ',
           }
         ])
 
@@ -296,7 +301,7 @@ const start = () => {
       },
     ])
     .then((response) => {
-      // console.log(response.choice);
+      
       switch (response.choice) {
         case 'View all employees':
           viewAllEmployees();
