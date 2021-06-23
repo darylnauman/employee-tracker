@@ -132,11 +132,10 @@ const addEmployee = () => {
 }
 
 const addDepartment = () => {
-  console.log('In addDepartment');
   inquirer
     .prompt([
       {
-        name: newDepartment,
+        name: 'newDepartment',
         type: 'input',
         message: 'What is the new department name? '
       }
@@ -155,8 +154,61 @@ const addDepartment = () => {
     })
 }
 
-const addRole = () => {
-  start();
+const getDepartments = () => {
+  return new Promise( (resolve, reject) => {
+  
+    const query = `SELECT * FROM employees_db.department`;
+    connection.query(
+      query,
+      (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+  })
+})
+}
+
+const addRole = async () => {
+  
+  const departments = await getDepartments();
+
+  const responses = await inquirer
+  .prompt([
+    {
+      name: 'title',
+      type: 'input',
+      message: 'What is the new role? ',
+    },
+    {
+      name: 'salary',
+      type: 'number',
+      message: "What is the role's salary? ",
+    },
+    {
+      name: 'department',
+      type: 'list',
+      choices: departments.map(department => department.name),
+      message: 'What department is the role in? '
+    }
+  ])
+  
+  departments.forEach(department => {
+    if (department.name === responses.department) {
+      responses.department = department.id;
+    }
+  });
+
+  connection.query(
+    'INSERT INTO employees_db.role SET ?',
+    {
+      title: responses.title,
+      salary: responses.salary,
+      department_id: responses.department,
+    },
+    (err) => {
+      if (err) throw err;
+      console.log('New role added successfully!\n')
+      start();
+  })
 }
 
 //  --------- REMOVES --------- //
