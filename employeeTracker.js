@@ -34,32 +34,6 @@ const viewAllEmployees = () => {
   })
 }
 
-const viewAllEmployeesByDepartment = () => {
-  const query = `SELECT department.id AS "Department ID", department.name AS Department FROM employees_db.department`;
-  connection.query(
-    query,
-    (err, results) => {
-      if (err) throw err;
-      console.log('\n');
-      console.table(results);
-      start();
-  })
-}
-
-const viewAllEmployeesByManager = () => {
-  const query = `SELECT employee.first_name, employee.last_name, manager_id
-  FROM employees_db.employee
-  ORDER BY employee.manager_id;`;
-  connection.query(
-    query,
-    (err, results) => {
-      if (err) throw err;
-      console.log('\n');
-      console.table(results);
-      start();
-  })
-}
-
 const viewAllDepartments = () => {
   const query = `SELECT department.id AS "Department ID", department.name AS Department FROM employees_db.department`;
   connection.query(
@@ -90,7 +64,15 @@ const addEmployee = async () => {
   
   connection.query('Select * FROM role', async (err, roles) => {
     if (err) throw err; 
-  
+    
+    connection.query('Select * FROM employee WHERE manager_id IS NULL', async (err, managers) => {
+      if (err) throw err; 
+
+    managers = managers.map(manager => ({name:manager.first_name + " " + manager.last_name, value: manager.id}));
+    managers.push({name:"None"});
+
+    console.log(JSON.stringify(managers));
+
     const responses = await inquirer
       .prompt([
         {
@@ -109,31 +91,34 @@ const addEmployee = async () => {
           choices: roles.map(role => ({name:role.title, value: role.id})),
           name: "role_id"
         },
-        // {
-        //   type: "list",
-        //   message: "Who is the employee's manager? ",
-        //   choices: [], // TO DO - GET LIST OF MANAGERS + NULL?
-        //   name: "" // MANAGER ID OR EMPLOYEE NAME??
-        // }
+        {
+          type: "list",
+          message: "Who is the employee's manager? ",
+          choices: managers,
+          name: "manager_id"
+        }
       ])
     
-      console.log(JSON.stringify(responses));
+      if (responses.manager_id === "None") {
+        responses.manager_id = null;
+      }
 
-    // connection.query(
-    //     'INSERT INTO employee SET ?',
-    //     {
-    //       first_name: responses.first_name,
-    //       last_name: responses.last_name,
-    //       role_id: responses.role_id,
-    //       // manager_id: '' // TO DO FIGURE OUT GETTING MANAGER ID
-    //     },
-    //     (err, res) => {
-    //       if (err) throw err;
-    //       console.log("New employee added");
-    //       start();
-    //     }
-    // )
+    connection.query(
+        'INSERT INTO employee SET ?',
+        {
+          first_name: responses.first_name,
+          last_name: responses.last_name,
+          role_id: responses.role_id,
+          manager_id: responses.manager_id
+        },
+        (err, res) => {
+          if (err) throw err;
+          console.log("New employee added.\n");
+          start();
+        }
+    )
   })
+})
 }
 
 const addDepartment = async () => {
@@ -153,7 +138,7 @@ const addDepartment = async () => {
       },
       (err) => {
         if (err) throw err;
-        console.log('New department added successfully!')
+        console.log('New department added successfully!\n')
         start();
       }
     )
@@ -215,12 +200,6 @@ const addRole = async () => {
   })
 }
 
-//  --------- REMOVES --------- //
-
-const removeEmployee = () => {
-  start();
-}
-
 //  --------- UPDATES --------- //
 
 const updateEmployeeRole = async () => {
@@ -271,8 +250,22 @@ const updateEmployeeRole = async () => {
   })
 }
 
-const updateEmployeeManager = () => {
-  start();
+//  --------- BUDGET --------- //
+
+const totalUtilizedBudget = () => {
+  
+  const query = `SELECT sum(salary) AS BUDGET FROM employee
+  INNER JOIN role
+  ON employee.role_id = role.id`;
+
+  connection.query(
+    query,
+    (err, result) => {
+      if (err) throw err;
+      console.log('\n');
+      console.table(result);
+      start();
+  })
 }
 
 //  --------- START --------- //
@@ -284,17 +277,14 @@ const start = () => {
         type: "list",
         message: "What would you like to do? ",
         choices: [
-          "View all employees",          
-          "View all employees by department",
-          "View all employees by manager",
+          "View all employees",
           "View all departments",
           "View all roles",
           "Add employee",
           "Add department",
           "Add role",
-          "Remove employee",
           "Update employee role",
-          "Update employee manager",
+          "Total Utilized Budget",
           "Quit",
         ],
         name: "choice",
@@ -306,12 +296,6 @@ const start = () => {
         case 'View all employees':
           viewAllEmployees();
           break;
-        case 'View all employees by department':
-          viewAllEmployeesByDepartment();
-          break;
-        case 'View all employees by manager':
-           viewAllEmployeesByManager();
-           break;
         case 'View all departments':
           viewAllDepartments();
           break;
@@ -327,15 +311,11 @@ const start = () => {
         case 'Add role':
           addRole();
           break;
-        case 'Remove employee':
-          removeEmployee();
-          break;
         case 'Update employee role':
           updateEmployeeRole();
           break;
-        case 'Update employee manager':
-          updateEmployeeManager();
-          break;
+        case 'Total Utilized Budget':
+          totalUtilizedBudget();
         case 'Quit':
           connection.end();
           break;
@@ -347,6 +327,7 @@ const start = () => {
 
 connection.connect((err) => {
   if (err) throw err;
-  console.log(`connected as id ${connection.threadId}`);
+  // console.log(`connected as id ${connection.threadId}`);
+  console.log('Welcome to Employee Tracker');
   start();
 });
