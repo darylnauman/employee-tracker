@@ -38,14 +38,3 @@ CREATE TABLE department (
 
 INSERT INTO department (name)
 VALUES ("Sales"), ("Legal"), ("Engineering");
-
--- Sales 1
--- Legal 2
--- Engineering 3
-
--- Sales Lead 1
--- Salesperson 2
--- Legal Team Lead 3
--- Lawyer 4
--- Lead Engineer 5
--- Software Engineer 6

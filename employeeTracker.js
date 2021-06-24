@@ -284,7 +284,7 @@ const start = () => {
           "Add department",
           "Add role",
           "Update employee role",
-          "Total Utilized Budget",
+          "Total utilized budget",
           "Quit",
         ],
         name: "choice",
@@ -314,7 +314,7 @@ const start = () => {
         case 'Update employee role':
           updateEmployeeRole();
           break;
-        case 'Total Utilized Budget':
+        case 'Total utilized budget':
           totalUtilizedBudget();
         case 'Quit':
           connection.end();

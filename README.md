@@ -18,6 +18,11 @@ The focus of this homework assignment for the University of Toronto SCS Coding B
 ## Key Features
 - Application uses the inquirer package available from [npm](https://www.npmjs.com/package/inquirer) that allows for the command line prompts and user responses to be captured.
 - Application uses the mysql package available at [npm](https://www.npmjs.com/package/mysql) to connect to the MySQL database and perform queries
+- User can add departments, roles and employees
+- User can view departments, roles and employees
+- User can update employee roles
+- User can view the total utilized budget of a department, i.e. the combined salaries of all employees in that department (homework bonus)
+- A seed.sql file is also provided to pre-populate the database if desired
 
 ## Walkthrough Video
 The following video demonstrates the application's functionality.
@@ -27,8 +32,8 @@ The following video demonstrates the application's functionality.
 This product is under the MIT License.
 
 ## Screenshots
-The images below show aspects of the application including prompts at the command line for the user, ADD MORE.
+The images below show aspects of the application including prompts at the command line for the user and sample output of a listing of all employees.
 
-![Screenshot of -- ADD TEXT --.](./assets/images/employee-tracker-screenshot-01.png)
+![Screenshot of initial user prompt.](./assets/images/employee-tracker-screenshot-01.png)
 
-![Screenshot of -- ADD TEXT --.](./assets/images/employee-tracker-screenshot-02.png)
+![Screenshot of view all employees output.](./assets/images/employee-tracker-screenshot-02.png)
