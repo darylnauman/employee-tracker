@@ -71,8 +71,6 @@ const addEmployee = async () => {
     managers = managers.map(manager => ({name:manager.first_name + " " + manager.last_name, value: manager.id}));
     managers.push({name:"None"});
 
-    console.log(JSON.stringify(managers));
-
     const responses = await inquirer
       .prompt([
         {
@@ -252,7 +250,7 @@ const updateEmployeeRole = async () => {
 
 //  --------- BUDGET --------- //
 
-const totalUtilizedBudget = () => {
+const totalUtilizedBudget = async () => {
   
   const query = `SELECT sum(salary) AS BUDGET FROM employee
   INNER JOIN role
@@ -260,7 +258,7 @@ const totalUtilizedBudget = () => {
 
   connection.query(
     query,
-    (err, result) => {
+    async (err, result) => {
       if (err) throw err;
       console.log('\n');
       console.table(result);
@@ -316,6 +314,7 @@ const start = () => {
           break;
         case 'Total utilized budget':
           totalUtilizedBudget();
+          break;
         case 'Quit':
           connection.end();
           break;
