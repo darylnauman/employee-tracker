@@ -5,7 +5,7 @@
 [Description](#description) <br/>
 [Key Features](#key-features) <br/>
 [Walkthrough Video](#walkthrough-video) <br/>
-[Screenshots](#screenshots)
+[Screenshots](#screenshots) <br/>
 [License](#license) <br/>
 
 ## Description
