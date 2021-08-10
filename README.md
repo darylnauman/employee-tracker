@@ -2,14 +2,10 @@
 ![MIT License](https://img.shields.io/badge/license-MIT%20License-blue.svg)
 
 ## Table of Contents
-[Description](#description)
-
-[Key Features](#key-features)
-
-[License](#license)
-
-[Walkthrough Video](#walkthrough-video)
-
+[Description](#description) <br/>
+[Key Features](#key-features) <br/>
+[License](#license) <br/>
+[Walkthrough Video](#walkthrough-video) <br/>
 [Screenshots](#screenshots)
 
 ## Description
