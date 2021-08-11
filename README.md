@@ -6,7 +6,6 @@
 [Key Features](#key-features) <br/>
 [Walkthrough Video](#walkthrough-video) <br/>
 [Screenshots](#screenshots) <br/>
-[Contributing](#contributing) <br/>
 [Questions](#questions) <br/>
 [License](#license)
 
