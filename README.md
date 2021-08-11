@@ -1,4 +1,4 @@
-# Homework Assignment - Unit 12 MySQL Homework: Employee Tracker
+# Employee Tracker (MySQL)
 ![MIT License](https://img.shields.io/badge/license-MIT%20License-blue.svg)
 
 ## Table of Contents
@@ -6,7 +6,9 @@
 [Key Features](#key-features) <br/>
 [Walkthrough Video](#walkthrough-video) <br/>
 [Screenshots](#screenshots) <br/>
-[License](#license) <br/>
+[Contributing](#contributing) <br/>
+[Questions](#questions) <br/>
+[License](#license)
 
 ## Description
 The focus of this homework assignment for the University of Toronto SCS Coding Boot Camp was to architect and build a solution for managing a company's employees using node, inquirer, and MySQL.
@@ -30,6 +32,9 @@ The images below show aspects of the application including prompts at the comman
 ![Screenshot of initial user prompt.](./assets/images/employee-tracker-screenshot-01.png)
 
 ![Screenshot of view all employees output.](./assets/images/employee-tracker-screenshot-02.png)
+
+## Questions
+Please contact me (see my profile), I'm happy to answer any questions.
 
 ## License
 This product is under the MIT License.
