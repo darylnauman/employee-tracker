@@ -33,7 +33,7 @@ The images below show aspects of the application including prompts at the comman
 ![Screenshot of view all employees output.](./assets/images/employee-tracker-screenshot-02.png)
 
 ## Questions
-If you have any questions, I am please contact me (see my profile) as I am happy to answer them.
+If you have any questions, please contact me (see my profile), I am happy to answer them.
 
 ## License
 This product is under the MIT License.
